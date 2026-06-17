@@ -79,11 +79,57 @@
       elResultados.appendChild(card);
     });
   }
-  async function carregarPerguntas() {}
+  async function carregarPerguntas() {
+    var lista = document.getElementById("lista-perguntas");
+    lista.innerHTML = "";
+    var res = await sb.from("questions").select("*").order("ordem", { ascending: true });
+    if (res.error) {
+      lista.innerHTML = '<p class="erro">Erro ao carregar perguntas.</p>';
+      return;
+    }
+    res.data.forEach(function (q) {
+      var row = document.createElement("div");
+      row.className = "q-admin" + (q.ativa ? "" : " q-inativa");
+      row.innerHTML =
+        '<input type="number" value="' + q.ordem + '" title="Ordem">' +
+        '<input type="text" value="' + (q.texto || "").replace(/"/g, "&quot;") + '">' +
+        '<button class="btn btn-secundario btn-guardar">Guardar</button>' +
+        '<button class="btn btn-secundario btn-toggle">' + (q.ativa ? "Desativar" : "Ativar") + "</button>";
+
+      var inputOrdem = row.querySelector('input[type="number"]');
+      var inputTexto = row.querySelector('input[type="text"]');
+
+      row.querySelector(".btn-guardar").addEventListener("click", async function () {
+        var up = await sb.from("questions")
+          .update({ texto: inputTexto.value, ordem: parseInt(inputOrdem.value, 10) || 0 })
+          .eq("id", q.id);
+        if (up.error) { alert("Erro ao guardar."); console.error(up.error); return; }
+        carregarPerguntas();
+      });
+
+      row.querySelector(".btn-toggle").addEventListener("click", async function () {
+        var up = await sb.from("questions").update({ ativa: !q.ativa }).eq("id", q.id);
+        if (up.error) { alert("Erro ao alterar estado."); console.error(up.error); return; }
+        carregarPerguntas();
+      });
+
+      lista.appendChild(row);
+    });
+  }
   async function carregarTudo() {
     await carregarResultados();
     await carregarPerguntas();
   }
+  document.getElementById("btn-adicionar").addEventListener("click", async function () {
+    var texto = document.getElementById("nova-pergunta").value.trim();
+    var ordem = parseInt(document.getElementById("nova-ordem").value, 10) || 0;
+    if (!texto) { return; }
+    var ins = await sb.from("questions").insert({ texto: texto, ordem: ordem, ativa: true });
+    if (ins.error) { alert("Erro ao adicionar."); console.error(ins.error); return; }
+    document.getElementById("nova-pergunta").value = "";
+    document.getElementById("nova-ordem").value = "0";
+    carregarPerguntas();
+  });
   window.__carregarTudo = carregarTudo; // usado pelas tarefas seguintes
 
   // Sessão persistida.
