@@ -102,6 +102,7 @@ p.lead { font-size: 1.1rem; color: var(--cinza); }
   border-radius: var(--raio);
   box-shadow: var(--sombra);
   padding: 28px;
+  text-align: center;
 }
 
 /* Progresso */
