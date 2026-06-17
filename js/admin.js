@@ -5,6 +5,15 @@
   var formLogin = document.getElementById("form-login");
   var erroLogin = document.getElementById("erro-login");
 
+  function escapeHtml(s) {
+    return String(s == null ? "" : s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
   function mostrarPainel(autenticado) {
     areaLogin.style.display = autenticado ? "none" : "block";
     areaPainel.style.display = autenticado ? "block" : "none";
@@ -30,7 +39,6 @@
     mostrarPainel(false);
   });
 
-  // Placeholders preenchidos nas Tasks 9 e 10.
   async function carregarResultados() {
     var elTotal = document.getElementById("total-respostas");
     var elResultados = document.getElementById("resultados");
@@ -73,7 +81,7 @@
       var card = document.createElement("div");
       card.className = "resultado-pergunta";
       card.innerHTML =
-        "<h3>" + q.texto + "</h3>" +
+        "<h3>" + escapeHtml(q.texto) + "</h3>" +
         '<div class="resultado-meta">' + n + " respostas · média " + media.toFixed(2) + " / 4</div>" +
         barras;
       elResultados.appendChild(card);
@@ -92,7 +100,7 @@
       row.className = "q-admin" + (q.ativa ? "" : " q-inativa");
       row.innerHTML =
         '<input type="number" value="' + q.ordem + '" title="Ordem">' +
-        '<input type="text" value="' + (q.texto || "").replace(/"/g, "&quot;") + '">' +
+        '<input type="text" value="' + escapeHtml(q.texto) + '">' +
         '<button class="btn btn-secundario btn-guardar">Guardar</button>' +
         '<button class="btn btn-secundario btn-toggle">' + (q.ativa ? "Desativar" : "Ativar") + "</button>";
 
@@ -130,7 +138,6 @@
     document.getElementById("nova-ordem").value = "0";
     carregarPerguntas();
   });
-  window.__carregarTudo = carregarTudo; // usado pelas tarefas seguintes
 
   // Sessão persistida.
   sb.auth.getSession().then(function (res) {
