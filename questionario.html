@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Questionário — Esprodouro</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <main>
+    <div class="cartao" id="cartao">
+      <div class="progresso">
+        <div class="progresso-texto" id="progresso-texto">A carregar…</div>
+        <div class="progresso-barra"><div class="progresso-fill" id="progresso-fill"></div></div>
+      </div>
+
+      <div id="pergunta-area">
+        <p class="pergunta-texto" id="pergunta-texto"></p>
+        <div class="graus">
+          <button class="grau-btn grau-4" data-grau="4">Muito Satisfeito</button>
+          <button class="grau-btn grau-3" data-grau="3">Satisfeito</button>
+          <button class="grau-btn grau-2" data-grau="2">Insatisfeito</button>
+          <button class="grau-btn grau-1" data-grau="1">Muito Insatisfeito</button>
+        </div>
+        <div class="nav-pergunta">
+          <button class="btn btn-secundario" id="btn-anterior" style="visibility:hidden">← Anterior</button>
+          <span></span>
+        </div>
+      </div>
+
+      <p id="estado" class="lead" style="display:none"></p>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/layout.js"></script>
+  <script src="js/questionario.js"></script>
+</body>
+</html>
