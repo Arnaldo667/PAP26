@@ -26,8 +26,23 @@ body {
   background: var(--azul-escuro);
   padding: 18px 24px;
   text-align: center;
+  position: relative;
 }
 .site-header .logo { height: 56px; max-width: 90%; object-fit: contain; }
+.header-nav {
+  position: absolute;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--branco);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+.header-nav:hover { background: rgba(255, 255, 255, 0.12); }
 
 /* Rodapé */
 .site-footer {
@@ -135,5 +150,7 @@ p.lead { font-size: 1.1rem; color: var(--cinza); }
 
 @media (max-width: 520px) {
   .graus { grid-template-columns: 1fr; }
-  .site-header .logo { height: 44px; }
+  .site-header { padding: 14px 12px; }
+  .site-header .logo { height: 40px; }
+  .header-nav { right: 10px; padding: 6px 10px; font-size: 0.8rem; }
 }
