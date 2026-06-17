@@ -59,7 +59,8 @@ O projeto Supabase já existe; serão fornecidos `URL` e `anon key` num
 
 Todas as páginas partilham um **cabeçalho** com fundo na cor da marca (vermelho
 Esprodouro) e o logótipo branco (`Imagens/AF_LogoEsprodouro2025White-01.png`), e
-um **rodapé** com a tarja (`Imagens/Tarja Geral 2025-2026.png`). O cabeçalho e
+um **rodapé** com a tarja (`Imagens/Tarja Geral 2025-2026.png`). O cabeçalho
+tem fundo azul escuro `#171927`. O cabeçalho e
 rodapé são injetados por um pequeno script partilhado (`js/layout.js`) para
 evitar duplicação.
 
@@ -118,8 +119,9 @@ Anónimo / público geral. Não são recolhidos dados pessoais nem identificaç�
 
 ## Aspeto visual
 
-- Cor primária: vermelho da marca (do "DOURO" do logótipo) para o cabeçalho,
-  de modo a contrastar com o logótipo branco. Cinza/neutros para o restante.
+- Cor do cabeçalho: **azul escuro `#171927`**, para o logótipo branco
+  contrastar. Vermelho da marca (do "DOURO" do logótipo) como cor de destaque;
+  cinza/neutros para o restante.
 - Botões de grau grandes, com cores intuitivas (verde→vermelho do mais
   satisfeito ao menos satisfeito), acessíveis (contraste e tamanho de toque).
 - Responsivo (telemóvel e desktop).
