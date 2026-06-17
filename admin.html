@@ -21,9 +21,12 @@
 
     <!-- Painel -->
     <div id="area-painel" style="display:none">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px">
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:8px; flex-wrap:wrap">
         <h1 style="margin:0">Resultados</h1>
-        <button class="btn btn-secundario" id="btn-logout">Terminar sessão</button>
+        <div style="display:flex; gap:10px">
+          <button class="btn btn-perigo" id="btn-reset">Reiniciar votos</button>
+          <button class="btn btn-secundario" id="btn-logout">Terminar sessão</button>
+        </div>
       </div>
 
       <p class="lead" id="total-respostas">—</p>

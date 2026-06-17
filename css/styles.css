@@ -94,6 +94,7 @@ p.lead { font-size: 1.1rem; color: var(--cinza); }
 }
 .btn:hover { filter: brightness(0.95); }
 .btn-secundario { background: #e6e6ec; color: #333; }
+.btn-perigo { background: #b91c1c; }
 
 /* Cartão */
 .cartao {

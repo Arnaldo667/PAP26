@@ -39,6 +39,30 @@
     mostrarPainel(false);
   });
 
+  document.getElementById("btn-reset").addEventListener("click", async function () {
+    if (!confirm(
+      "Reiniciar os votos?\n\nIsto apaga TODAS as respostas e a contagem volta a " +
+      "zero. Quem já tinha respondido poderá votar novamente. Esta ação é irreversível."
+    )) { return; }
+
+    var btn = this;
+    btn.disabled = true;
+
+    // 1) Apagar todas as respostas (cascata nas answers).
+    var del = await sb.from("responses").delete().neq("id", "00000000-0000-0000-0000-000000000000");
+    // 2) Mudar o token de reset → reativa a votação em todos os dispositivos.
+    var upd = await sb.from("survey_meta").update({ reset_token: crypto.randomUUID() }).eq("id", true);
+
+    btn.disabled = false;
+    if (del.error || upd.error) {
+      alert("Ocorreu um erro ao reiniciar os votos.");
+      console.error(del.error || upd.error);
+      return;
+    }
+    alert("Votos reiniciados. A contagem está a zero e todos podem votar de novo.");
+    carregarTudo();
+  });
+
   var GRAUS = [4, 3, 2, 1];
   var ROTULOS = ["Muito Satisfeito", "Satisfeito", "Insatisfeito", "Muito Insatisfeito"];
   var CORES = ["#1f9d55", "#67b346", "#e8852b", "#d23a34"];

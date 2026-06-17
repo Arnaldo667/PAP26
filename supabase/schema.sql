@@ -25,18 +25,31 @@ create table if not exists public.answers (
   created_at  timestamptz not null default now()
 );
 
+-- Estado do inquérito: token de reset (linha única).
+-- Ao fazer reset, o admin muda o token; os dispositivos que já votaram
+-- guardam o token sob o qual votaram e voltam a poder votar quando muda.
+create table if not exists public.survey_meta (
+  id          boolean primary key default true,
+  reset_token uuid not null default gen_random_uuid(),
+  constraint survey_meta_singleton check (id)
+);
+insert into public.survey_meta (id) values (true) on conflict (id) do nothing;
+
 -- Grants (RLS continua a ser a barreira real) -----------------
 grant select, insert on public.questions to anon, authenticated;
 grant update, delete on public.questions to authenticated;
 grant insert on public.responses to anon, authenticated;
-grant select on public.responses to authenticated;
+grant select, delete on public.responses to authenticated;
 grant insert on public.answers to anon, authenticated;
 grant select on public.answers to authenticated;
+grant select on public.survey_meta to anon, authenticated;
+grant update on public.survey_meta to authenticated;
 
 -- RLS ---------------------------------------------------------
-alter table public.questions enable row level security;
-alter table public.responses enable row level security;
-alter table public.answers   enable row level security;
+alter table public.questions   enable row level security;
+alter table public.responses   enable row level security;
+alter table public.answers     enable row level security;
+alter table public.survey_meta enable row level security;
 
 -- questions
 drop policy if exists questions_select_public_active on public.questions;
@@ -60,6 +73,10 @@ drop policy if exists responses_select_auth on public.responses;
 create policy responses_select_auth on public.responses
   for select to authenticated using (true);
 
+drop policy if exists responses_delete_auth on public.responses;
+create policy responses_delete_auth on public.responses
+  for delete to authenticated using (true);
+
 -- answers
 drop policy if exists answers_insert_public on public.answers;
 create policy answers_insert_public on public.answers
@@ -68,6 +85,15 @@ create policy answers_insert_public on public.answers
 drop policy if exists answers_select_auth on public.answers;
 create policy answers_select_auth on public.answers
   for select to authenticated using (true);
+
+-- survey_meta
+drop policy if exists survey_meta_select_public on public.survey_meta;
+create policy survey_meta_select_public on public.survey_meta
+  for select to anon, authenticated using (true);
+
+drop policy if exists survey_meta_update_auth on public.survey_meta;
+create policy survey_meta_update_auth on public.survey_meta
+  for update to authenticated using (true) with check (true);
 
 -- Perguntas (editáveis à vontade no admin) --------------------
 insert into public.questions (texto, ordem) values

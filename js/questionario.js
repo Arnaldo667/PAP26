@@ -1,23 +1,10 @@
 (function () {
-  var FLAG = "esprodouro_inquerito_respondido";
-
-  // Bloqueia repetição no mesmo dispositivo: a landing continua acessível,
-  // mas o questionário em si não pode ser respondido outra vez.
-  if (localStorage.getItem(FLAG) === "true") {
-    var progresso = document.querySelector(".progresso");
-    if (progresso) { progresso.style.display = "none"; }
-    document.getElementById("pergunta-area").style.display = "none";
-    var bloqueio = document.getElementById("estado");
-    bloqueio.style.display = "block";
-    bloqueio.innerHTML =
-      "Já respondeu a este inquérito neste dispositivo. Obrigado pela sua " +
-      'participação!<br><br><a class="btn" href="index.html">Voltar ao início</a>';
-    return;
-  }
+  var VOTO_TOKEN = "esprodouro_voto_token";
 
   var perguntas = [];     // [{id, texto, ordem}]
   var respostas = {};     // { question_id: grau }
   var indice = 0;
+  var resetToken = null;  // token de reset atual (estado do inquérito)
 
   var elTexto = document.getElementById("pergunta-texto");
   var elProgTexto = document.getElementById("progresso-texto");
@@ -25,6 +12,16 @@
   var elAnterior = document.getElementById("btn-anterior");
   var elArea = document.getElementById("pergunta-area");
   var elEstado = document.getElementById("estado");
+
+  function bloquear() {
+    var progresso = document.querySelector(".progresso");
+    if (progresso) { progresso.style.display = "none"; }
+    elArea.style.display = "none";
+    elEstado.style.display = "block";
+    elEstado.innerHTML =
+      "Já respondeu a este inquérito neste dispositivo. Obrigado pela sua " +
+      'participação!<br><br><a class="btn" href="index.html">Voltar ao início</a>';
+  }
 
   function mostrarPergunta() {
     var q = perguntas[indice];
@@ -63,7 +60,9 @@
     var aInsert = await window.sb.from("answers").insert(linhas);
     if (aInsert.error) { return falhar(aInsert.error); }
 
-    localStorage.setItem(FLAG, "true");
+    // Regista o token de reset sob o qual votou; se o admin fizer reset,
+    // o token muda e este dispositivo volta a poder votar.
+    localStorage.setItem(VOTO_TOKEN, resetToken);
     window.location.replace("conclusao.html");
   }
 
@@ -76,6 +75,17 @@
   }
 
   async function carregar() {
+    // Estado do inquérito (token de reset). Se a tabela ainda não existir,
+    // usa um valor de recurso para o bloqueio continuar a funcionar.
+    var metaRes = await window.sb.from("survey_meta").select("reset_token").limit(1).maybeSingle();
+    resetToken = (metaRes && metaRes.data && metaRes.data.reset_token) || "sem-token";
+
+    // Já votou nesta ronda neste dispositivo?
+    if (localStorage.getItem(VOTO_TOKEN) === resetToken) {
+      bloquear();
+      return;
+    }
+
     var res = await window.sb
       .from("questions")
       .select("id, texto, ordem")
