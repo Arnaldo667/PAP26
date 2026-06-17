@@ -69,13 +69,21 @@ drop policy if exists answers_select_auth on public.answers;
 create policy answers_select_auth on public.answers
   for select to authenticated using (true);
 
--- Perguntas exemplo (apagar/editar à vontade no admin) --------
+-- Perguntas (editáveis à vontade no admin) --------------------
 insert into public.questions (texto, ordem) values
-  ('Como avalia a sua satisfação global com a Esprodouro?', 1),
-  ('Como avalia as instalações e os equipamentos?', 2),
-  ('Como avalia o desempenho dos professores/formadores?', 3),
-  ('Como avalia o atendimento dos serviços administrativos (secretaria)?', 4),
-  ('Como avalia a comunicação e a informação prestada pela escola?', 5),
-  ('Como avalia a oferta formativa e as atividades?', 6),
-  ('Como avalia o ambiente e a relação na comunidade escolar?', 7),
-  ('Recomendaria a Esprodouro a outras pessoas?', 8);
+  ('Como avalia o comportamento dos alunos?', 1),
+  ('Como avalia a comida da cantina?', 2),
+  ('Como avalia os professores?', 3),
+  ('Como avalia a direção da escola?', 4),
+  ('Como avalia as instalações da escola?', 5),
+  ('Como avalia a limpeza da escola?', 6),
+  ('Como avalia a segurança da escola?', 7),
+  ('Como avalia as atividades extracurriculares?', 8),
+  ('Como avalia o atendimento dos funcionários?', 9),
+  ('Como avalia a qualidade do ensino?', 10),
+  ('Como avalia os equipamentos e materiais?', 11),
+  ('Como avalia a disciplina de Português?', 12),
+  ('Como avalia a disciplina de Matemática?', 13),
+  ('Como avalia a disciplina de Inglês?', 14),
+  ('Como avalia a disciplina de AIE?', 15),
+  ('Como avalia a disciplina de Educação Física?', 16);
