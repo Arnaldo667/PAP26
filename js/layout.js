@@ -12,6 +12,11 @@
     var header = document.createElement("header");
     header.className = "site-header";
     header.innerHTML =
+      '<div class="header-info">' +
+        "<strong>Arnaldo Gouveia</strong>" +
+        "<span>PAP 2026</span>" +
+        "<span>TEAC-5</span>" +
+      "</div>" +
       '<img class="logo" src="' + LOGO + '" alt="Esprodouro — Escola Profissional do Alto Douro">' +
       '<a class="header-nav" href="' + navHref + '">' + navTexto + "</a>";
     document.body.insertBefore(header, document.body.firstChild);
