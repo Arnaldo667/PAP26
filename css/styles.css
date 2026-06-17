@@ -1,0 +1,129 @@
+:root {
+  --azul-escuro: #171927;
+  --vermelho: #e2001a;
+  --cinza: #555;
+  --cinza-claro: #f4f4f6;
+  --branco: #fff;
+  --raio: 12px;
+  --sombra: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+* { box-sizing: border-box; }
+
+html, body { margin: 0; padding: 0; }
+
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: #1d1d22;
+  background: var(--cinza-claro);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Cabeçalho */
+.site-header {
+  background: var(--azul-escuro);
+  padding: 18px 24px;
+  text-align: center;
+}
+.site-header .logo { height: 56px; max-width: 90%; object-fit: contain; }
+
+/* Rodapé */
+.site-footer {
+  margin-top: auto;
+  background: var(--branco);
+  padding: 18px 16px;
+  text-align: center;
+  border-top: 1px solid #e3e3e8;
+}
+.site-footer .tarja { width: 100%; max-width: 1100px; height: auto; }
+
+/* Conteúdo */
+main {
+  flex: 1;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 32px 20px;
+}
+
+h1 { color: var(--azul-escuro); font-size: 1.8rem; }
+p.lead { font-size: 1.1rem; color: var(--cinza); }
+
+/* Botões gerais */
+.btn {
+  display: inline-block;
+  border: none;
+  border-radius: var(--raio);
+  padding: 14px 28px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--vermelho);
+  color: var(--branco);
+  text-decoration: none;
+}
+.btn:hover { filter: brightness(0.95); }
+.btn-secundario { background: #e6e6ec; color: #333; }
+
+/* Cartão */
+.cartao {
+  background: var(--branco);
+  border-radius: var(--raio);
+  box-shadow: var(--sombra);
+  padding: 28px;
+}
+
+/* Progresso */
+.progresso { margin-bottom: 22px; }
+.progresso-texto { font-size: 0.95rem; color: var(--cinza); margin-bottom: 8px; }
+.progresso-barra { height: 8px; background: #e6e6ec; border-radius: 999px; overflow: hidden; }
+.progresso-fill { height: 100%; background: var(--vermelho); width: 0; transition: width 0.25s ease; }
+
+/* Pergunta */
+.pergunta-texto { font-size: 1.45rem; color: var(--azul-escuro); margin: 8px 0 28px; }
+
+/* Botões de grau */
+.graus { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.grau-btn {
+  border: 2px solid transparent;
+  border-radius: var(--raio);
+  padding: 26px 16px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--branco);
+  cursor: pointer;
+  transition: transform 0.08s ease, box-shadow 0.15s ease;
+}
+.grau-btn:hover { transform: translateY(-2px); box-shadow: var(--sombra); }
+.grau-4 { background: #1f9d55; } /* Muito Satisfeito */
+.grau-3 { background: #67b346; } /* Satisfeito */
+.grau-2 { background: #e8852b; } /* Insatisfeito */
+.grau-1 { background: #d23a34; } /* Muito Insatisfeito */
+
+.nav-pergunta { margin-top: 22px; display: flex; justify-content: space-between; }
+
+/* Admin */
+.login-form { max-width: 360px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+.login-form input { padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; }
+.erro { color: var(--vermelho); font-weight: 600; }
+
+.resultado-pergunta { background: var(--branco); border-radius: var(--raio); box-shadow: var(--sombra); padding: 20px; margin-bottom: 16px; }
+.resultado-pergunta h3 { margin: 0 0 6px; color: var(--azul-escuro); font-size: 1.1rem; }
+.resultado-meta { color: var(--cinza); font-size: 0.9rem; margin-bottom: 12px; }
+.barra-linha { display: flex; align-items: center; gap: 10px; margin: 6px 0; font-size: 0.9rem; }
+.barra-rotulo { width: 150px; flex: none; }
+.barra-track { flex: 1; background: #eee; border-radius: 999px; height: 18px; overflow: hidden; }
+.barra-valor { height: 100%; border-radius: 999px; }
+.barra-num { width: 40px; text-align: right; flex: none; }
+
+.q-admin { display: flex; align-items: center; gap: 10px; background: var(--branco); padding: 12px; border-radius: 8px; box-shadow: var(--sombra); margin-bottom: 8px; }
+.q-admin input[type="text"] { flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 6px; }
+.q-admin input[type="number"] { width: 64px; padding: 8px; border: 1px solid #ccc; border-radius: 6px; }
+.q-inativa { opacity: 0.5; }
+
+@media (max-width: 520px) {
+  .graus { grid-template-columns: 1fr; }
+  .site-header .logo { height: 44px; }
+}
