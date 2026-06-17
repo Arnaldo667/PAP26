@@ -10,26 +10,14 @@
   <main>
     <div class="cartao">
       <h1>Inquérito de Satisfação</h1>
-      <div id="conteudo-inicio">
-        <p class="lead">
-          A sua opinião é importante para a Esprodouro. Este questionário é
-          anónimo e demora cerca de 2 minutos.
-        </p>
-        <a class="btn" href="questionario.html">Iniciar questionário</a>
-      </div>
-      <p id="ja-respondeu" class="lead" style="display:none">
-        Já respondeu a este inquérito neste dispositivo. Obrigado pela sua
-        participação!
+      <p class="lead">
+        A sua opinião é importante para a Esprodouro. Este questionário é
+        anónimo e demora cerca de 2 minutos.
       </p>
+      <a class="btn" href="questionario.html">Iniciar questionário</a>
     </div>
   </main>
 
   <script src="js/layout.js"></script>
-  <script>
-    if (localStorage.getItem("esprodouro_inquerito_respondido") === "true") {
-      document.getElementById("conteudo-inicio").style.display = "none";
-      document.getElementById("ja-respondeu").style.display = "block";
-    }
-  </script>
 </body>
 </html>

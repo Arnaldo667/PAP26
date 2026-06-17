@@ -1,9 +1,17 @@
 (function () {
   var FLAG = "esprodouro_inquerito_respondido";
 
-  // Bloqueia repetição no mesmo dispositivo.
+  // Bloqueia repetição no mesmo dispositivo: a landing continua acessível,
+  // mas o questionário em si não pode ser respondido outra vez.
   if (localStorage.getItem(FLAG) === "true") {
-    window.location.replace("index.html");
+    var progresso = document.querySelector(".progresso");
+    if (progresso) { progresso.style.display = "none"; }
+    document.getElementById("pergunta-area").style.display = "none";
+    var bloqueio = document.getElementById("estado");
+    bloqueio.style.display = "block";
+    bloqueio.innerHTML =
+      "Já respondeu a este inquérito neste dispositivo. Obrigado pela sua " +
+      'participação!<br><br><a class="btn" href="index.html">Voltar ao início</a>';
     return;
   }
 
