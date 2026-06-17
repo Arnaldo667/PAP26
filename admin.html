@@ -27,6 +27,18 @@
       </div>
 
       <p class="lead" id="total-respostas">—</p>
+
+      <div class="grafico-card">
+        <h3>Satisfação global</h3>
+        <div class="grafico-wrap"><canvas id="g-global"></canvas></div>
+      </div>
+
+      <div class="grafico-card">
+        <h3>Média por pergunta (1–4)</h3>
+        <div class="grafico-wrap"><canvas id="g-medias"></canvas></div>
+      </div>
+
+      <h2 style="color:#171927">Distribuição por pergunta</h2>
       <div id="resultados"></div>
 
       <h1 style="margin-top:36px">Gestão de perguntas</h1>
@@ -40,6 +52,7 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
   <script src="js/config.js"></script>
   <script src="js/supabase.js"></script>
   <script src="js/layout.js"></script>

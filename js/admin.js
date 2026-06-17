@@ -39,9 +39,48 @@
     mostrarPainel(false);
   });
 
+  var GRAUS = [4, 3, 2, 1];
+  var ROTULOS = ["Muito Satisfeito", "Satisfeito", "Insatisfeito", "Muito Insatisfeito"];
+  var CORES = ["#1f9d55", "#67b346", "#e8852b", "#d23a34"];
+  var graficos = []; // instâncias Chart.js a destruir entre recargas
+
+  function contar(answers) {
+    var c = { 1: 0, 2: 0, 3: 0, 4: 0 };
+    answers.forEach(function (a) { if (c[a.grau] != null) { c[a.grau]++; } });
+    return c;
+  }
+
+  function media(answers) {
+    if (!answers.length) { return 0; }
+    var soma = answers.reduce(function (s, a) { return s + a.grau; }, 0);
+    return soma / answers.length;
+  }
+
+  function criarDonut(canvas, contagem) {
+    graficos.push(new Chart(canvas, {
+      type: "doughnut",
+      data: {
+        labels: ROTULOS,
+        datasets: [{
+          data: GRAUS.map(function (g) { return contagem[g]; }),
+          backgroundColor: CORES,
+          borderWidth: 1,
+        }],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: "bottom" } },
+      },
+    }));
+  }
+
   async function carregarResultados() {
     var elTotal = document.getElementById("total-respostas");
     var elResultados = document.getElementById("resultados");
+
+    graficos.forEach(function (g) { g.destroy(); });
+    graficos = [];
     elResultados.innerHTML = "";
 
     var rCount = await sb.from("responses").select("*", { count: "exact", head: true });
@@ -55,37 +94,75 @@
       console.error(qRes.error || aRes.error);
       return;
     }
+    var perguntas = qRes.data;
+    var answers = aRes.data;
 
-    var rotulos = { 4: "Muito Satisfeito", 3: "Satisfeito", 2: "Insatisfeito", 1: "Muito Insatisfeito" };
-    var cores = { 4: "#1f9d55", 3: "#67b346", 2: "#e8852b", 1: "#d23a34" };
+    // 1) Satisfação global (donut com todas as respostas).
+    criarDonut(document.getElementById("g-global"), contar(answers));
 
-    qRes.data.forEach(function (q) {
-      var desta = aRes.data.filter(function (a) { return a.question_id === q.id; });
-      var n = desta.length;
-      var soma = desta.reduce(function (s, a) { return s + a.grau; }, 0);
-      var media = n ? (soma / n) : 0;
-      var contagem = { 1: 0, 2: 0, 3: 0, 4: 0 };
-      desta.forEach(function (a) { contagem[a.grau]++; });
+    // 2) Média por pergunta (barras).
+    graficos.push(new Chart(document.getElementById("g-medias"), {
+      type: "bar",
+      data: {
+        labels: perguntas.map(function (q, i) { return "P" + (i + 1); }),
+        datasets: [{
+          label: "Média (1–4)",
+          data: perguntas.map(function (q) {
+            return media(answers.filter(function (a) { return a.question_id === q.id; }));
+          }),
+          backgroundColor: "#171927",
+        }],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: { y: { min: 0, max: 4, ticks: { stepSize: 1 } } },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              title: function (items) { return perguntas[items[0].dataIndex].texto; },
+              label: function (it) { return "Média: " + it.parsed.y.toFixed(2) + " / 4"; },
+            },
+          },
+        },
+      },
+    }));
 
-      var barras = [4, 3, 2, 1].map(function (g) {
-        var pct = n ? Math.round((contagem[g] / n) * 100) : 0;
-        return (
-          '<div class="barra-linha">' +
-            '<span class="barra-rotulo">' + rotulos[g] + "</span>" +
-            '<span class="barra-track"><span class="barra-valor" style="width:' + pct + "%;background:" + cores[g] + '"></span></span>' +
-            '<span class="barra-num">' + contagem[g] + "</span>" +
-          "</div>"
-        );
-      }).join("");
+    // 3) Donut por pergunta — criar o DOM primeiro, depois instanciar os gráficos
+    //    (Chart.js precisa do canvas já no documento e com dimensões definidas).
+    var grid = document.createElement("div");
+    grid.className = "donut-grid";
+    var porCriar = [];
+
+    perguntas.forEach(function (q, i) {
+      var desta = answers.filter(function (a) { return a.question_id === q.id; });
 
       var card = document.createElement("div");
-      card.className = "resultado-pergunta";
-      card.innerHTML =
-        "<h3>" + escapeHtml(q.texto) + "</h3>" +
-        '<div class="resultado-meta">' + n + " respostas · média " + media.toFixed(2) + " / 4</div>" +
-        barras;
-      elResultados.appendChild(card);
+      card.className = "donut-card";
+
+      var h3 = document.createElement("h3");
+      h3.textContent = "P" + (i + 1) + " — " + q.texto;
+
+      var meta = document.createElement("div");
+      meta.className = "resultado-meta";
+      meta.textContent = desta.length + " respostas · média " + media(desta).toFixed(2) + " / 4";
+
+      var wrap = document.createElement("div");
+      wrap.className = "donut-wrap";
+      var canvas = document.createElement("canvas");
+      wrap.appendChild(canvas);
+
+      card.appendChild(h3);
+      card.appendChild(meta);
+      card.appendChild(wrap);
+      grid.appendChild(card);
+
+      porCriar.push({ canvas: canvas, contagem: contar(desta) });
     });
+
+    elResultados.appendChild(grid);
+    porCriar.forEach(function (item) { criarDonut(item.canvas, item.contagem); });
   }
   async function carregarPerguntas() {
     var lista = document.getElementById("lista-perguntas");

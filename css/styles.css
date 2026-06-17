@@ -112,6 +112,16 @@ p.lead { font-size: 1.1rem; color: var(--cinza); }
 .resultado-pergunta { background: var(--branco); border-radius: var(--raio); box-shadow: var(--sombra); padding: 20px; margin-bottom: 16px; }
 .resultado-pergunta h3 { margin: 0 0 6px; color: var(--azul-escuro); font-size: 1.1rem; }
 .resultado-meta { color: var(--cinza); font-size: 0.9rem; margin-bottom: 12px; }
+
+/* Gráficos do admin */
+.grafico-card { background: var(--branco); border-radius: var(--raio); box-shadow: var(--sombra); padding: 20px; margin-bottom: 20px; }
+.grafico-card h3 { margin: 0 0 14px; color: var(--azul-escuro); font-size: 1.1rem; }
+.grafico-wrap { position: relative; height: 320px; }
+
+.donut-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-bottom: 24px; }
+.donut-card { background: var(--branco); border-radius: var(--raio); box-shadow: var(--sombra); padding: 16px; }
+.donut-card h3 { margin: 0 0 4px; color: var(--azul-escuro); font-size: 1rem; }
+.donut-wrap { position: relative; height: 240px; }
 .barra-linha { display: flex; align-items: center; gap: 10px; margin: 6px 0; font-size: 0.9rem; }
 .barra-rotulo { width: 150px; flex: none; }
 .barra-track { flex: 1; background: #eee; border-radius: 999px; height: 18px; overflow: hidden; }
